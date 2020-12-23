@@ -1,0 +1,27 @@
+@import '../../../assets/common.less';
+.login{
+	.content{
+		border-top:@ipt_border ;
+		padding:15px;
+		.box_flex(@flow:row wrap,flex-start,flex-start);
+		li{
+			margin:0 60px 5px 0;
+			.des{
+				display: inline-block;
+				min-width: 60px;
+			}
+			input{
+				.reset_ipt();
+			}
+		}
+	}
+	.operation{
+		border-top:@ipt_border ;
+		padding:20px;
+		.box_flex(@flow:row wrap,space-between,flex-start);
+		input{
+			display: inline-block;
+			.btn();
+		}
+	}
+}

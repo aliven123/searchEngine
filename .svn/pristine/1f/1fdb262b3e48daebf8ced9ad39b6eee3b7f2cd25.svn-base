@@ -1,0 +1,22 @@
+@import '../../assets/common.less';
+.toggle_header{
+	position: absolute;
+	padding:2px;
+	// 要兼顾list页内的头部宽度，所以width不能太大，否则看不到数据
+	width:300px;
+	table{
+		width: 100%;
+		td{
+			cursor: pointer;
+			&:hover{
+				background:@blue;
+				color:white;
+			}
+		}
+		.active{
+			background:@blue;
+			color:white;
+		}
+	}
+	
+}

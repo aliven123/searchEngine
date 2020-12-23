@@ -1,0 +1,170 @@
+<template>
+  <div id="app">
+	  <div class="mainctn">
+		  <router-view />
+	  </div>
+	  <nav_bar :class="['g_nav_bar',{'g_nav_active':navHishow==true}]"
+		@getAdmin="getAdmin('self',$event)"
+	  />
+	  <admin ref="admin" />
+  </div>
+</template>
+<script>
+export default {
+  name: 'App',
+  data:function(){
+	  return {
+		  navHishow:false,
+		  start_y:null,
+		  move_y:null,
+		  is_PC:null
+	  }
+  },
+  /* metaInfo: {
+  	 title:window.sjg_config.metaInfo.title, 
+  	 meta:window.sjg_config.metaInfo.meta,
+  	 link:window.sjg_config.metaInfo.link
+  }, */
+  components:{
+	  nav_bar:()=>import('./components/nav_bar/nav_bar.vue'),
+	  admin:()=>import('./components/admin/admin.vue'),
+  },
+  methods:{
+	  handleContextMenu(){
+		  // 禁止右键菜单
+		document.oncontextmenu=(ev)=>{
+			if(this.$store.state.loading.forbin.rightclick=='true'){
+				return false
+			}
+		}  
+	  },
+	  preventCopy(){
+		  // 禁止ctrl+c
+		document.onkeydown=()=>{
+			// console.log(this.$store.state.loading);
+		    if(event.ctrlKey&&this.$store.state.loading.forbin.ctrlc=='true'){
+		          event.returnValue=false;
+		    }
+		} 
+	  },
+	  saveState(){
+		  console.log(JSON.stringify(this.$store.state));
+		  sessionStorage.state=JSON.stringify(this.$store.state);
+	  },
+	  getAdmin(onself,data){
+		  console.log(data);
+		  this.$refs.admin.operateDrawer(data.hishow);
+	  },
+	  handleNav(){
+		  /* PC端没有touchstart不会触发 */
+		  $('body').on('touchstart',(e)=>{
+			  e.preventDefault;
+			  this.start_y=e.originalEvent.changedTouches[0].pageY;
+		  })
+		  $('body').on('touchmove',(e)=>{
+				  e.preventDefault;
+				  this.move_y=e.originalEvent.changedTouches[0].pageY;
+		  })
+		  $('body').on('touchend',(e)=>{
+			  e.preventDefault;
+			  const url=window.location.href;
+			  this.navHishow=true; 
+			  return;
+			  if(url.includes('details')){return};
+			  console.log(url);
+			  if(this.move_y>this.start_y){
+				  console.log('下滑')
+				  this.navHishow=false;
+			  }else{
+				  console.log('上滑');
+				  this.navHishow=true;
+			  }
+		  })
+	  }
+  },
+  computed:{
+	  userswitch(){
+		  return this.$store.state.userswitch;
+	  }
+  },
+  watch:{
+	  userswitch:{
+		  handler(newval){
+			  if(newval){
+				  this.getAdmin(null,{hishow:true});
+			  }
+		  }
+	  }
+  },
+  created(){
+	//在页面加载时读取sessionStorage里的状态信息
+	if (sessionStorage.getItem("state") ) {
+		this.$store.replaceState(Object.assign({}, this.$store.state,JSON.parse(sessionStorage.getItem("state"))))
+	}
+	//在页面刷新时将vuex里的信息保存到sessionStorage里
+	this.basefn.onAttach(window,'unload',this.saveState);
+  },
+  mounted(){
+	  $('html').height('100%');
+	  $('body').height('100%');
+	  $('#app').height('100%');
+	  this.is_PC=this.basefn.IsPC;
+	  if(this.is_PC){
+		  this.navHishow=false;
+	  }else{
+		  this.navHishow=true;
+	  };
+	  this.handleNav();
+	  this.handleContextMenu();
+	  this.preventCopy();
+	  
+  }
+}
+</script>
+
+<style>
+html,body{
+	height:100%;
+	width:100%;
+}
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  color: #2c3e50;
+  margin-top: 0px;
+  height:100%;
+  width:100%;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow:column;
+  justify-content:flex-start;
+  align-items: flex-start;
+}
+.mainctn{
+	width:100%;
+	/* height:0; */
+	overflow: auto;
+	flex: 1;
+}
+.g_nav_bar{
+	width:100%;
+	position:absolute;
+	bottom:0;
+	display: none;
+}
+.g_nav_active{
+	width:100%;
+	position:absolute;
+	bottom:0;
+	display: block;
+}
+.info{
+	background:#c8c8c8;
+	opacity: 0.9;
+}
+.info i,.info p{
+	color:#A0522d!important;
+}
+</style>

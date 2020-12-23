@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+	<link rel="shortcut icon" type="image/x-icon" href="./static/favicon.ico" rel="external nofollow" />
+    <meta name="keywords" content="金融类搜索引擎,金股,股票,官网,找股票,金股,牛股,soujingu,sjg,niugu,niugu">
+	<title>搜金股</title>
+	<script>
+		window.sjg_config={
+			request_url:{
+				wb:'http://10.88.71.64:2335'// 后端模板分割位置
+			}
+		};
+	</script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

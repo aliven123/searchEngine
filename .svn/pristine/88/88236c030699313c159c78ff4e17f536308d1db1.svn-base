@@ -1,0 +1,41 @@
+@import '../../../assets/common.less';
+.forget_pwd{
+	.content{
+		border-top:@ipt_border ;
+		padding:15px;
+		.box_flex(@flow:row wrap,flex-start,flex-start);
+		li{
+			margin:0 60px 5px 0;
+			.des{
+				display: inline-block;
+				min-width: 70px;
+			}
+			input{
+				.reset_ipt();
+			}
+			.status{
+				display: inline-block;
+				width:12px;
+			}
+			.get_code{
+				font-size: 12px;
+				border: @ipt_border;
+				display: inline-block;
+				min-width:72px;
+				cursor: pointer;
+				.padfn(@padding:3px 5px 3px 5px);
+				color:@blue;
+			}
+		}
+		
+	}
+	.operation{
+		border-top:@ipt_border ;
+		padding:20px;
+		.box_flex(@flow:row wrap,space-between,flex-start);
+		input{
+			display: inline-block;
+			.btn();
+		}
+	}
+}

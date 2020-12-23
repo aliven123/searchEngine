@@ -1,0 +1,105 @@
+import * as Types from './types.js';
+const mutations={
+	[Types.setUserdata](state,datas){
+		const userdata=JSON.parse(JSON.stringify(state.userdata));
+		for(const [key,val] of Object.entries(datas)){
+			userdata[key]=val;
+		};
+		state.userdata=userdata;
+		localStorage.userdata=JSON.stringify(datas);
+		console.log(state.userdata);
+	},
+	[Types.clearZixuan](state,datas){
+		let {news_data,news_data:{optional,zixuan,sort}}=state;
+		if(zixuan){
+			// 用户退出，删除自选模块到数据
+			news_data.def='word';
+			Reflect.deleteProperty(news_data,'zixuan');
+			Reflect.deleteProperty(news_data,'optional');
+			// 删除导航数据sort中，自选的对象
+			for(const [index,item] of Array.entries(sort)){
+				if(item.val=='zixuan'){
+					sort.splice(index,1);
+					break;
+				}
+			}
+		}
+	},
+	[Types.setSearchData](state,datas_obj){
+		const search_data=JSON.parse(JSON.stringify(state.search_data));
+		const {list,page,c_page,news,search_txt,start,len}=datas_obj;
+		search_data.list=list;
+		search_data.page=page;
+		search_data.c_page=c_page;
+		search_data.len=len;
+		search_data.start=start;
+		state.search_data=search_data;
+		state.search_txt=search_txt;
+		if(state.search_txt!=''){
+			state.zhenggu.time_stamp=new Date().getTime();
+		};
+		console.log(state.search_txt);
+	},
+	[Types.setNewsData](state,datas){
+		const news_data=JSON.parse(JSON.stringify(state.news_data));
+		news_data.nav_index=datas.nav_index;
+		news_data.sort=datas.sort;
+		news_data.def=datas.def!=undefined?datas.def:datas.sort[0].val;
+		/* 在首次加载的时候,news和word都有内容,都会加载,在换一批中,
+		   只加载当前模块的数据,news和word为undefined
+		*/
+		const arr=['news','word','recom','zixuan','optional','share']
+		if(datas.update_target){
+			news_data[datas.def]=datas.update_target
+		};
+		for(const key of arr){
+			if(datas[key]){
+				news_data[key]=datas[key];
+			}
+		};
+		// console.log(news_data);		
+		state.news_data=news_data;
+		sessionStorage.news_data=JSON.stringify(news_data);
+	},
+	[Types.setScroll](state,{scroll_top,url,current_route_name}){
+		state.scroll_top=scroll_top;
+		state.iframe_data.current_route_name=current_route_name;
+		state.iframe_data.url=url;
+		sessionStorage.scroll_top=state.scroll_top;
+		console.log(state.iframe_data.current_route_name);
+	},
+	[Types.setLoading](state,datas){
+		const loading=JSON.parse(JSON.stringify(state.loading));
+		console.log(Object.keys(datas),datas);
+		for(const key of Object.keys(datas)){
+			Object.assign(loading,{
+				[key]:datas[key]
+			})
+		};
+		state.loading=loading;
+	},
+	[Types.setNavLocation](state,datas){/* 设置导航的位置,方便下次返回的时候获取 */
+		const news_data=JSON.parse(JSON.stringify(state.news_data));
+		for(const key of Object.keys(datas)){
+			news_data[key]=datas[key];
+		};
+		state.news_data=news_data;
+	},
+	[Types.setUserboard](state,datas){
+		state.userswitch=datas.hishow;
+	},
+	[Types.setBoardInfo](state,datas){
+		const news_data=JSON.parse(JSON.stringify(state.news_data));
+		const key=Object.keys(datas.board_datas)[0];
+		for (let [i, item] of Array.entries(news_data.sort)) {
+			if (item.val == datas.def) {
+				 item.c_page =0;
+				break;
+			};
+		};
+		news_data[key]=datas.board_datas[key];
+		state.news_data=news_data;
+		sessionStorage.news_data=JSON.stringify(news_data);
+	}
+};
+export default mutations;

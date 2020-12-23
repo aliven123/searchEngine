@@ -1,0 +1,8 @@
+export const setUserdata='setUserdata';
+export const setSearchData='setSearchData';
+export const setNewsData='setNewsData';
+export const setScroll='setScroll';
+export const setLoading='setLoading';
+export const setNavLocation='setNavLocation';/* 定位导航的位置 */
+export const setUserboard='setUserboard';/* 定位导航的位置 */
+export const setBoardInfo='setBoardInfo';//点击排序的时候重置模块数据，重置sort中对应模块的页码；

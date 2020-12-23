@@ -1,0 +1,327 @@
+<template>
+	<div id="list_board" class="boxs" @click="handleMoreList(false)">
+		<div class="search_board boxs">
+			<div class="search_part">
+				<a class="logo" @click="goHomelayer">
+					<!-- <img src="../../assets/image/logo.png" alt=""> -->
+					<img v-if="loading.logo" :src="advertiseUrl(loading.logo)" alt="">
+				</a>
+				<!-- <input type="text"
+					v-model.trim="search_txt"
+					class="search_word"
+					@keyup.enter="getInfo(true)"
+				/> -->
+				<ipt_search :init_obj="ipt_obj.init_obj" :ipt_txt="ipt_obj.ipt_txt" class="search_word" @current_txt="getcurrentTxt('self',$event)"
+				 @targetSecurity="getIptTxt('self',$event)" />
+				<!-- <input type="button"
+					@click="getInfo(true)"
+					class="search_btn"
+					value="搜索"
+				/> -->
+				<button @click="getInfo(true)" class="search_btn iconfont iconsearch">
+				</button>
+			</div>
+			<!-- <div>登录账户</div> -->
+		</div>
+		<div class="main_part boxs">
+			<ul class="list boxs" ref='soujingu_list'>
+				<li class="indicator_ctn" v-if="rank_indicators_host===true">
+					<p class="menus">
+						<span v-for="(item,name) in menus.list"
+							:key="name"
+							class="boxs"
+							:class="{active:name==menus.def}"
+							@click="handleMenus(name)"
+							v-text="item.txt"
+						>
+						</span>
+					</p>
+					<keep-alive>
+						<commonent :is="menus.def"></commonent>
+						<rank_indicator />
+						<rec_stock />
+					</keep-alive>
+				</li><!-- 诊股模块加载入口 -->
+				<li class="total_num" v-if="search_data.page>0">
+					共为您找到相关结果约{{search_data.page}}条
+				</li>
+				<li class="relevant boxs">
+					<p>相关热搜：</p>
+					<div class="list boxs">
+						<a v-for="(item,index) in relevant.list" @click="seachHot(item)">
+							<span v-if="item instanceof Object" class="guba">
+								{{item.txt}}
+							</span>
+							<template v-else v-text="item">
+								{{item}}
+							</template>
+						</a>
+					</div>
+				</li>
+				<li v-for="(item,index) in search_data.list">
+					<h4>
+						<a v-if="is_PC==true" :href="item.unescapedUrl" v-html="item.title" :target="open_target" @click="mainListScroll(null,index)"></a>
+						<a v-else v-html="item.title" @click="mainListScroll(item.unescapedUrl,index)"></a>
+					</h4>
+					<div>
+						<p v-html="item.content"></p>
+						<img v-if="item.richSnippet!=undefined&&item.richSnippet.cseImage!=undefined" :src="advertiseUrl(item.richSnippet.cseImage.src)"
+						 alt="" />
+						<span v-text="item.formattedUrl"></span>
+					</div>
+				</li>
+				<li>
+					<div class="block">
+						<span @click="currentChange('prev')" class="prev boxs">上一页</span>
+						<span v-for="(num,index) in pageList" :class="['boxs',{'active':num==search_data.c_page}]" @click="currentChange(num)"
+						 v-text="num">
+						</span>
+						<span @click="currentChange('next')" class="next boxs">下一页</span>
+					</div>
+				</li>
+
+				<!-- 手机端：热词和新闻页模块显示在搜索结果下面 -->
+				<li v-if="is_PC==false">
+					<ul class="advertise boxs" ref='new_list'>
+						<li class="title boxs" ref='title'>
+							<div>
+								<span v-for="(item,index) in news_data.sort" :class="{active:item.val==news_data.def}" v-text="item.txt" @click="toggleHotNav(item.val,index)"></span>
+							</div>
+							<div>
+								<span class="iconfont iconhuanyihuan replace_ct" @click="replaceContent">换一换</span>
+							</div>
+						</li>
+						<!-- 模块锁定组件 -->
+						<li class="boxs global_lock_ctn" v-if="global_hishow">
+							<global_lock :datas="global_lock_datas"></global_lock>
+						</li>
+						<li class="header boxs" v-if="header_hishow">
+							<span class="num boxs">
+								热榜
+							</span><span class="details boxs">
+								关键词
+							</span><span class="lastindic boxs">
+								<!-- 涨幅/搜索指数 -->
+								<i v-for="(val,key) in news_data.word_header.header_obj" :class="{'active':key==news_data.word_header.def}"
+								 @click="indicsort(key,val)">
+									{{val}}
+									<span :class="['iconfont',{'iconpaixu-jiangxu':true}]">
+									</span>
+								</i>
+							</span>
+							<!-- 更多的按钮和模板，数据是news_data.word_header,word_header在public.js中定义-->
+							<span class="more_indic" @click.stop="handleMoreList(true)">更多</span>
+							<toggle_header :p_datas="news_data.word_header" @toggleindic="toggleindic('self',$event)" v-if="toggle_header.hishow" />
+						</li>
+						<!-- 热词 -->
+						<li v-if="news_data.def=='word'" v-for="(item,index) in news_data.word" class="hot_words boxs">
+							<span v-text="item.num" class="num boxs">
+							</span><span class="details boxs">
+								<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+								</i>
+								<i @click="seachHot(item.title)" v-text="item.title">
+								</i>
+							</span><span class="boxs lastindic">
+								<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)"
+								 @visitLogin="visitLogin('self',$event)" />
+							</span>
+						</li>
+						<!-- 推荐 -->
+						<li v-if="news_data.def=='recom'" v-for="(item,index) in news_data.recom" class="hot_words boxs">
+							<span v-text="item.num" class="num boxs">
+							</span><span class="details boxs one-txt-cut">
+								<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+								</i>
+								<i @click="seachHot(item.title)" v-text="item.title">
+								</i>
+							</span><span class="boxs lastindic">
+								<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)"
+								 @visitLogin="visitLogin('self',$event)" />
+							</span>
+						</li>
+						<!-- 热点新闻 -->
+						<li class="news boxs" v-if="news_data.def=='news'" v-for="(item,index) in news_data.news">
+							<h4 class="one-txt-cut">
+								<a v-if="is_PC==true" :href="item.unescapedUrl" v-html="item.title" :target="open_target" @click="mainListScroll"></a>
+								<a v-else v-html="item.title" @click="mainListScroll(item.unescapedUrl)"></a>
+							</h4>
+							<div>
+								<p v-html="item.content"></p>
+								<img v-if="item.richSnippet!=undefined&&item.richSnippet.cseImage!=undefined" :src="advertiseUrl(item.richSnippet.cseImage.src)"
+								 alt="" />
+								<template>
+									<span class="txt-cut" v-text="item.formattedUrl"></span>
+								</template>
+							</div>
+						</li>
+						<!-- 分享模块 -->
+						<li v-if="news_data.def=='share'"
+							v-for="(item,index) in news_data.share"
+							:key="item.title"
+							class="hot_words boxs"
+						>
+							<span v-text="item.num" class="num boxs">
+						
+							</span><span class="details boxs one-txt-cut" >
+								<!-- 跳转到股吧 -->
+								<i class="iconfont iconguba"
+								 @click="toGuba(item)"
+								 title="股吧"
+								 v-if="item.fid!=0">
+								</i>
+								<i @click="seachHot(item.title)" v-text="item.title">
+								</i>
+							</span><span class="boxs lastindic">
+								 <display_ctn
+								 :data_obj="item[news_data.word_header.def]"
+								 @handleDonate="handleDonate('self',$event)"
+								 @visitLogin="visitLogin('self',$event)"
+								   />
+							</span>
+						</li>
+						<!-- 自选 -->
+						<li v-if="news_data.def=='zixuan'" class="hot_words boxs optional">
+							<div class="toggle_zx">
+								<template v-for="(item,index) in news_data.optional.list">
+									<span v-text="item.name"
+									:class="[{'active':index==news_data.optional.def_i}]"
+									@click.stop="toggleOption(index)">
+									</span>
+								</template>
+							</div>
+							<div class="share boxs" @click="shareOptional">
+								分享
+							</div>
+						</li>
+						<li v-if="news_data.def=='zixuan'" v-for="(item,index) in news_data.zixuan" class="hot_words boxs">
+							<span v-text="item.num" class="num boxs">
+							</span><span class="details boxs">
+								<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+								</i>
+								<i @click="seachHot(item.title)" v-text="item.title">
+								</i>
+							</span><span class="boxs lastindic">
+								<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)"
+								 @visitLogin="visitLogin('self',$event)" />
+							</span>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<!-- 电脑热：热词和新闻页模块显示和搜索结果数据平行显示 -->
+			<ul class="advertise boxs" v-if="is_PC==true" ref='new_list'>
+				<li class="title boxs" ref='title'>
+					<div>
+						<span v-for="(item,index) in news_data.sort" :class="{active:item.val==news_data.def}" v-text="item.txt" @click="toggleHotNav(item.val,index)"></span>
+					</div>
+					<div>
+						<span class="iconfont iconhuanyihuan replace_ct" @click="replaceContent">换一换</span>
+					</div>
+				</li>
+				<!-- 模块锁定组件 -->
+				<li class="boxs global_lock_ctn" v-if="global_hishow">
+					<global_lock :datas="global_lock_datas"></global_lock>
+				</li>
+				<li class="header boxs" v-show="header_hishow">
+					<span class="num boxs">
+						热榜
+					</span><span class="details boxs">
+						关键词
+					</span><span class="lastindic boxs">
+						<!-- 涨幅/搜索指数 -->
+						<i v-for="(val,key) in news_data.word_header.header_obj" :class="{'active':key==news_data.word_header.def}"
+						 @click="indicsort(key,val)">
+							{{val}}
+							<span :class="['iconfont',{'iconpaixu-jiangxu':true}]">
+							</span>
+						</i>
+					</span>
+					<!-- 更多的按钮和模板，数据是news_data.word_header,word_header在public.js中定义-->
+					<span class="more_indic" @click.stop="handleMoreList(true)">更多</span>
+					<toggle_header :p_datas="news_data.word_header" @toggleindic="toggleindic('self',$event)" v-if="toggle_header.hishow" />
+
+				</li>
+				<!-- 热词 -->
+				<li v-if="news_data.def=='word'" v-for="(item,index) in news_data.word" class="hot_words boxs">
+					<span v-text="item.num" class="num boxs">
+					</span><span class="details boxs">
+						<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+						</i>
+						<i @click="seachHot(item.title)" v-text="item.title">
+						</i>
+					</span><span class="boxs lastindic">
+						<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)" @visitLogin="visitLogin('self',$event)" />
+					</span>
+				</li>
+				<!-- 推荐 -->
+				<li v-if="news_data.def=='recom'" v-for="(item,index) in news_data.recom" class="hot_words boxs">
+					<span v-text="item.num" class="num boxs">
+
+					</span><span class="details boxs one-txt-cut">
+						<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+						</i>
+						<i @click="seachHot(item.title)" v-text="item.title">
+						</i>
+					</span><span class="boxs lastindic">
+						<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)" @visitLogin="visitLogin('self',$event)" />
+					</span>
+				</li>
+				<!-- 热点新闻 -->
+				<li class="news boxs" v-if="news_data.def=='news'" v-for="(item,index) in news_data.news">
+					<h4 class="one-txt-cut">
+						<a v-if="is_PC==true" :href="item.unescapedUrl" v-html="item.title" :target="open_target" @click="mainListScroll"></a>
+						<a v-else v-html="item.title" @click="mainListScroll(item.unescapedUrl)"></a>
+					</h4>
+					<div>
+						<p v-html="item.content"></p>
+						<img v-if="item.richSnippet!=undefined&&item.richSnippet.cseImage!=undefined" :src="advertiseUrl(item.richSnippet.cseImage.src)"
+						 alt="" />
+						<template>
+							<span v-text="item.formattedUrl"></span>
+						</template>
+					</div>
+				</li>
+				<!-- 分享板块 -->
+				<li v-if="news_data.def=='share'" v-for="(item,index) in news_data.share" :key="item.title" class="hot_words boxs">
+					<span v-text="item.num" class="num boxs">
+
+					</span><span class="details boxs one-txt-cut">
+						<!-- 跳转到股吧 -->
+						<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+						</i>
+						<i @click="seachHot(item.title)" v-text="item.title">
+						</i>
+					</span><span class="boxs lastindic">
+						<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)" @visitLogin="visitLogin('self',$event)" />
+					</span>
+				</li>
+				<!-- 自选 -->
+				<li v-if="news_data.def=='zixuan'" class="hot_words boxs optional">
+					<div class="toggle_zx">
+						<template v-for="(item,index) in news_data.optional.list">
+							<span v-text="item.name" v-if="index<6" :class="[{'active':index==news_data.optional.def_i}]" @click.stop="toggleOption(index)">
+							</span>
+						</template>
+					</div>
+					<div class="share boxs" @click="shareOptional">
+						分享
+					</div>
+				</li>
+				<li v-if="news_data.def=='zixuan'" v-for="(item,index) in news_data.zixuan" class="hot_words boxs">
+					<span v-text="item.num" class="num boxs">
+					</span><span class="details boxs">
+						<i class="iconfont iconguba" @click="toGuba(item)" title="股吧" v-if="item.fid!=0">
+						</i>
+						<i @click="seachHot(item.title)" v-text="item.title">
+						</i>
+					</span><span class="boxs lastindic">
+						<display_ctn :data_obj="item[news_data.word_header.def]" @handleDonate="handleDonate('self',$event)" @visitLogin="visitLogin('self',$event)" />
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</template>
+<script src='./list_board.js'></script>
+<style lang="less" scoped src="./list_board.less"></style>

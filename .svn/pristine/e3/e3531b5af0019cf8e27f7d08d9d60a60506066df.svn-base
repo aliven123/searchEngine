@@ -1,0 +1,7 @@
+<template>
+	<div class="global_lock boxs">
+		46546
+	</div>
+</template>
+<script src="./global_lock.js"></script>
+<style lang="less" scoped src="./global_lock.less"></style>

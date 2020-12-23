@@ -1,0 +1,38 @@
+@import '../../assets/common.less';
+.admin{
+	text-align: left;
+	font-size: 16px;
+	.admin_ctn{
+		.user{
+			.padfn();
+			text-align: left;
+			.box_flex(row nowrap,flex-start,center);
+			margin-bottom: 10px;
+			border-bottom: @ipt_border;
+			span{
+				margin-right: 5px;
+			}
+		}
+		.operate{
+			.padfn(5px 5px 5px 14px);
+			.action{
+				cursor: pointer;
+				&:hover{
+					color:@blue;
+				}
+			}
+		}
+		.loginout{
+			border-top: @ipt_border;
+			margin-top: 10px;
+			.action{
+				cursor: pointer;
+				color:@hvred;
+				&:hover{
+					color:@hvred;
+					font-weight: bolder;
+				}
+			}
+		}
+	}
+}

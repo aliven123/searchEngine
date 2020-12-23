@@ -1,0 +1,78 @@
+//公共的变量，组件中的less可以通过@import引入使用这些变量和函数
+@font_color:black;
+@gray:#c8c8c8;
+@hv_gray:#c9c9c9;
+@blue:#6c9ef0;
+@hvblue:#67b8f2;
+@ipt_border:1px solid @gray;
+@black:#202020;
+@red:#A0522d;
+@hvred:#f24500;
+.box_flex(@flow:row wrap,@content:center,@cross_style:flex-start){
+    display: -webkit-flex;
+    display: flex;
+    flex-flow:@flow;
+//  主轴的对齐方式
+    justify-content:@content;
+//  交叉轴上的对齐方式
+    align-items: @cross_style;
+}
+.padfn(@padding:10px 10px 10px 10px){
+    padding:@padding;
+}
+.reset_ipt(@height:25px,@padding:4px 6px 4px 6px,@bg:white,@hvbg:white){
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    -webkit-box-sizing:border-box; /* Safari */
+    border: @ipt_border;
+    outline: none;
+    height:@height;
+    padding:@padding;
+    border-radius: 1px;
+    background:@bg;
+    color: black;
+    &:hover{
+        background:@hvbg;
+		border:1px solid @blue;
+        box-shadow: 0 0 1px @blue;
+    }
+}
+.nav_btn(@padding:4px 6px 4px 6px,@bg_color:@gray,@color:black,@hvbg:@blue,@hvcol:white){
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+	padding:@padding;
+	background:@bg_color;
+	color: @color;
+	&:hover{
+		background:@hvbg;
+	}
+	&:hover a{
+		color:@hvcol;
+	}
+	a{
+		color:@color;
+	}
+}
+.btn(@height:25px,@color:white,@bg:@blue,@hvbg:@hvblue){
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+	border: @ipt_border;
+	outline: none;
+	height:@height;
+	padding:4px 6px 4px 6px;
+	border-radius: 1px;
+	background:@bg;
+	color: @color;
+	cursor: pointer;
+	&:hover{
+	    background:@hvbg;
+	}
+}
+.active(@hvbg:@blue,@hvcol:white){
+	background:@hvbg;
+	a{
+		color:@hvcol;
+	}
+}

@@ -1,0 +1,26 @@
+@import '../../assets/common.less';
+.global_lock{
+	width:100%;
+	left:0;top:0;
+	z-index: 500;
+	position: absolute;
+	background:rgba(255,255,255,0.7);
+	margin:0 auto;
+	.des_ctn{
+		width:100%;
+		height:100%;
+		position: relative;
+		.des{
+			position: absolute;
+			left:50%;
+			top:15px;
+			max-width: 320px;
+			white-space: nowrap;
+			transform:translate(-50%);
+			color:@red;
+			font-weight: bold;
+			background:white;
+			box-shadow: 0 0 8px white;
+		}
+	}
+}
