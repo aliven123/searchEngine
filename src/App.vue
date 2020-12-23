@@ -7,6 +7,7 @@
 		@getAdmin="getAdmin('self',$event)"
 	  />
 	  <admin ref="admin" />
+	  <div>ceshi</div>
   </div>
 </template>
 <script>
