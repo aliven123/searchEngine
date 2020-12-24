@@ -166,7 +166,7 @@
 					</span><span class="details boxs one-txt-cut" >
 						<!-- 跳转到股吧 -->
 						<i class="iconfont iconguba"
-						 @click="toGuba(item)"
+						 @click.stop="toGuba(item)"
 						 title="股吧"
 						 v-if="item.fid!=0">
 						</i>

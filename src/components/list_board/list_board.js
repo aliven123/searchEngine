@@ -387,8 +387,8 @@ export default {
 			
 		},
 		toGuba(item){
-			// 切换到股吧
-			const str=`${item.title} 股吧 ${item.fid}`;
+			// 切换到行情
+			const str=`${item.title} 行情 ${item.fid}`;
 			pub.routeToGuba.call(this,str);
 		},
 		handleParams() {
