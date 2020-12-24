@@ -12,11 +12,11 @@ import {
 import mixin from '../list_board/mixin.js'
 
 const chart_head = '收益图';
-const def_SecurityID = '000001.SZ 平安银行'; //量化专家诊股默认的股票
+const def_SecurityID = '000001.SZ 平安银行'; //努金牛策诊股默认的股票
 const SecurityID_regexp = /^\(?(\d{6})\)?(\.\w{2}$)?/i; //取出股票代码的正则
 const s_indicname='s_indicname',s_indic_type='s_indic_type',s_SecurityID='s_SecurityID';
 export default {
-	name: 'rank_indicators', //专家诊股模块
+	name: 'rank_indicators', //努金牛策诊股模块
 	/* 股票切换到k线页面增加指标展示 */
 	mixins:[mixin],
 	data: function() {
@@ -58,7 +58,7 @@ export default {
 				code: null
 			},
 			wx_pay: {
-				// 量化专家诊股，购买微信二维码数据
+				// 努金牛策诊股，购买微信二维码数据
 				hishow: false,
 				status: '微信扫码支付!'
 			},
@@ -67,12 +67,12 @@ export default {
 				negative: 50
 			},
 			gzh: false,
-			diagnose_switch: ['true'], //量化专家诊股前的复选框
+			diagnose_switch: ['true'], //努金牛策诊股前的复选框
 			menus:{
 				def:'diagnose',
 				list:{
 					diagnose:{
-						txt:'专家诊股'
+						txt:'努金牛策诊股'
 					},
 					rec_stock:{
 						txt:'牛股排行'
@@ -288,7 +288,7 @@ export default {
 				//3.提示错误信息
 				if (error) {
 					Message.info({
-						message: '量化专家诊股错误：' + error,
+						message: '努金牛策诊股错误：' + error,
 						customClass: 'info'
 					});
 				}
@@ -391,7 +391,7 @@ export default {
 			};
 		},
 		toggleComponent(item) {
-			// 点击专家诊股，具体策略，跳转到东财模板详情页，携带对应参数；
+			// 点击努金牛策诊股，具体策略，跳转到东财模板详情页，携带对应参数；
 			let rank_href = "https://nujin.com/forum-2954-1.html";
 			if (location.host.includes('localhost') || location.host.includes('127')) {
 				rank_href = "http://localhost:666";

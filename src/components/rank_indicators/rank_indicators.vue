@@ -7,14 +7,14 @@
 						value="true"
 						v-model="diagnose_switch"
 					/>
-					量化专家诊股
+					努金牛策诊股
 				</label>
 			</span>
 			<span>：{{search_txt}}</span>
 			<span class="gongzhognhao" @click="gongzhonghao">关注公众号</span>
 			<div id="qrcode_ctn" v-show="gzh">
 				<div class="clearfix title">
-					<span>关注公众号</span>
+					<span>查看诊股结果</span>
 					<span class="fr iconfont iconclose"
 						 @click="gongzhonghao"
 					>

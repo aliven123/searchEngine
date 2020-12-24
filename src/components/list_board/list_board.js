@@ -83,7 +83,7 @@ export default {
 				def:'rank_indicator',
 				list:{
 					rank_indicator:{
-						txt:'专家诊股'
+						txt:'努金牛策诊股'
 					},
 					rec_stock:{
 						txt:'牛股排行'
@@ -606,7 +606,7 @@ export default {
 	created() {
 		console.log(location.host);
 		console.log(['localhost:8082','127.0.0.1:8082','niuguresou.com'].includes(location.host));
-		if(['localhost:8082','127.0.0.1:8082','niuguresou.com'].includes(location.host)){
+		if(['localhost:8082','127.0.0.1:8082','niuguresou.com','niuresou.com'].includes(location.host)){
 			this.rank_indicators_host=true;
 		};
 		route_params = this.$route.query.q;
