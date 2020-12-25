@@ -98,6 +98,7 @@ export default {
 			if (s_code) {
 				search_params += `&s_code=${s_code}`
 			};
+			// console.log(item);
 			// console.log(search_params);
 			// return;
 			window.open(`${rank_href}&${search_params}`, '_self');

@@ -15,12 +15,14 @@ const chart_head = '收益图';
 const def_SecurityID = '000001.SZ 平安银行'; //努金牛策诊股默认的股票
 const SecurityID_regexp = /^\(?(\d{6})\)?(\.\w{2}$)?/i; //取出股票代码的正则
 const s_indicname='s_indicname',s_indic_type='s_indic_type',s_SecurityID='s_SecurityID';
+const warning='声明：此仅作为研究参考，不构成任何投资建议；依此入市，盈亏自负。';
 export default {
 	name: 'rank_indicators', //努金牛策诊股模块
 	/* 股票切换到k线页面增加指标展示 */
 	mixins:[mixin],
 	data: function() {
 		return {
+			warning,
 			username: false,
 			is_PC: null,
 			indicators: {
@@ -407,8 +409,9 @@ export default {
 			if (s_code) {
 				search_params += `&s_code=${s_code}`
 			};
-			
-			// return;
+			/* console.log(search_params);
+			console.log(item);
+			return; */
 			window.open(`${rank_href}${search_params}`, '_self');
 		},
 		guanzhuStatus() {

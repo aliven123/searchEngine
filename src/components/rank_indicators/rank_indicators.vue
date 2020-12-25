@@ -45,7 +45,7 @@
 					:style="styleDatas.advice_data.styleobj"
 				>
 				</p>
-				
+				<p style="font-size: 14px;color:gray;margin:4px 0">{{warning}}</p>
 			</div>
 			<div class="clearfix boxs advice_ctn" :style="{'width':is_PC===true?'100%':'100%'}">
 			  <!-- 多空预测-->
