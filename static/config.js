@@ -6,10 +6,15 @@ if(env=='development'){
 		shuo_url:'http://10.88.71.83:8008'
 	};
 }else if(env=='production'){
+	// host={
+	// 	lai_url:'https://data.aupool.cn',
+	// 	bin_url:'https://data.aupool.cn',
+	// 	shuo_url:'https://data.aupool.cn'
+	// };
 	host={
-		lai_url:'https://data.aupool.cn',
-		bin_url:'https://data.aupool.cn',
-		shuo_url:'https://data.aupool.cn'
+		lai_url:'https://data.nujin.com',
+		bin_url:'https://data.nujin.com',
+		shuo_url:'https://data.nujin.com'
 	};
 };
 export {host}

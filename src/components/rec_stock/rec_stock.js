@@ -50,7 +50,7 @@ export default {
 					'权益最大回撤',
 					'空仓周期数',
 					'理想仓位',
-					'年化复利收益率'
+					'年化收益率'
 				]
 			}
 		}
@@ -137,7 +137,7 @@ export default {
 		if (this.host.lai_url.includes('10.88.71.83')) {
 			this.current_url = 'http://10.88.71.83';
 		} else {
-			this.current_url = 'https://data.aupool.cn'
+			this.current_url = 'https://data.nujin.com'
 		};
 	},
 	activated(){
