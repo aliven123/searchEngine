@@ -2,7 +2,7 @@ const env=process.env.NODE_ENV;
 let host=null;
 if(env=='development'){
 	host={
-		lai_url:'http://10.88.71.83:8006',
+		lai_url:'http://10.88.71.83:8008',
 		shuo_url:'http://10.88.71.83:8008'
 	};
 }else if(env=='production'){

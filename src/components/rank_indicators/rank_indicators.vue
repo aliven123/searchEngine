@@ -52,7 +52,7 @@
 			  <!-- <div :class="{blur_cover:username===false}"></div> -->
 			  <!-- <div class="blur_cover"></div> -->
 			  <div class="fl boxs"
-					  title="点击查看看多策略"
+					  title="点击查看多头策略"
 			    :style="styleDatas.p_style"
 					  @click.stop="handleIndicator('up')"
 			  >
@@ -67,7 +67,7 @@
 					  </span>
 			  </div>
 			  <div class="fl boxs"
-						title="点击查看看空策略"
+						title="点击查看空头策略"
 			    :style="styleDatas.n_style"
 					  @click.stop="handleIndicator('down')"
 			  >

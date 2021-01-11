@@ -168,4 +168,11 @@ html,body{
 .info i,.info p{
 	color:#A0522d!important;
 }
+
+@media screen and (max-width: 750px) {
+  .el-message-box {
+    width: 80% !important;
+  }
+}
+
 </style>

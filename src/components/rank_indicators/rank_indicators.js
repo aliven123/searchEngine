@@ -1,6 +1,6 @@
 import QRCode from 'qrcodejs2';
 import {
-	Message
+	Message,MessageBox
 } from 'element-ui';
 import {
 	mapState
@@ -334,12 +334,13 @@ export default {
 				});
 				this.handleData(res_obj, data.param);
 			} else {
-				let message = up_down === 'up' ? '请登录后查看多头策略' : '请登录后查看空头策略';
-				this.indicators.tbody = [];
-				Message.info({
-					message,
-					customClass: 'info'
-				});
+				let login_url=location.origin+'/login';
+				MessageBox({
+					title:'查看多空策略，请登录后再试!',
+					message:`请点击 <strong><a href="${login_url}">登录</a></strong> 查看多空策略`,
+					dangerouslyUseHTMLString:true,
+					showConfirmButton:false
+				})
 			};
 		},
 		handleData(res_obj, up_down) {
